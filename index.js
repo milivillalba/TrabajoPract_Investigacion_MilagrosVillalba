@@ -1,10 +1,12 @@
 //imports
+require("dotenv").config();
 const express = require("express");
+const fileUpload = require("express-fileupload"); //importar express-fileupload
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const path = require("path");
-require("dotenv").config();
+const cloudinary = require("./services/cloudinary");
 
 require("ejs");
 
@@ -29,10 +31,14 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.set("view engine", "ejs");
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(fileUpload());
 
 //routes
+// const routes = require("./routes");
+// app.use("/", routes);
+app.use(require("./routes/routes"));
 
 // escuche el puerto
 app.listen(port, () => console.log(`Server on http://localhost:${port}`));
